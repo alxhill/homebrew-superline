@@ -1,0 +1,49 @@
+name: Update formula
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-formula
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Update formula to latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(gh release view --repo alxhill/superline --json tagName --jq '.tagName | ltrimstr("v")')
+          archive_url="https://static.crates.io/crates/superline/superline-${version}.crate"
+          curl --fail --location --retry 6 --retry-all-errors --retry-delay 10 \
+            --output /tmp/superline.crate "$archive_url"
+          checksum=$(shasum -a 256 /tmp/superline.crate | cut -d ' ' -f 1)
+
+          perl -pi -e "s/superline-[0-9]+\\.[0-9]+\\.[0-9]+\\.crate/superline-${version}.crate/" Formula/superline.rb
+          perl -pi -e "s/sha256 \"[0-9a-f]{64}\"/sha256 \"${checksum}\"/" Formula/superline.rb
+
+          if git diff --quiet; then
+            echo "Formula is already at v${version}"
+            exit 0
+          fi
+
+          brew tap-new --no-git local/superline
+          cp Formula/superline.rb "$(brew --repository local/superline)/Formula/"
+          brew audit --strict local/superline/superline
+          brew install local/superline/superline
+          brew test local/superline/superline
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Formula/superline.rb
+          git commit -m "chore: update superline to v${version}"
+          git push
