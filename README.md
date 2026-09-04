@@ -5,3 +5,5 @@ Install [superline](https://github.com/alxhill/superline) with:
 ```bash
 brew install alxhill/superline/superline
 ```
+
+The formula currently supports Apple Silicon Macs.
