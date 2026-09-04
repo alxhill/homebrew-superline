@@ -31,12 +31,12 @@ jobs:
             exit 1
           fi
 
-          archive_url="https://static.crates.io/crates/superline/superline-${version}.crate"
+          archive_url="https://github.com/alxhill/superline/releases/download/v${version}/superline-${version}-aarch64-apple-darwin.tar.gz"
           curl --fail --location --retry 6 --retry-all-errors --retry-delay 10 \
-            --output /tmp/superline.crate "$archive_url"
-          checksum=$(shasum -a 256 /tmp/superline.crate | cut -d ' ' -f 1)
+            --output /tmp/superline.tar.gz "$archive_url"
+          checksum=$(shasum -a 256 /tmp/superline.tar.gz | cut -d ' ' -f 1)
 
-          perl -pi -e "s/superline-[0-9]+\\.[0-9]+\\.[0-9]+\\.crate/superline-${version}.crate/" Formula/superline.rb
+          perl -pi -e "s#/download/v[0-9]+\\.[0-9]+\\.[0-9]+/superline-[0-9]+\\.[0-9]+\\.[0-9]+-aarch64#/download/v${version}/superline-${version}-aarch64#" Formula/superline.rb
           perl -pi -e "s/sha256 \"[0-9a-f]{64}\"/sha256 \"${checksum}\"/" Formula/superline.rb
 
           if git diff --quiet; then

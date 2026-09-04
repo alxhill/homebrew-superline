@@ -1,15 +1,15 @@
 class Superline < Formula
   desc "Configurable Powerline implementation in pure Rust"
   homepage "https://github.com/alxhill/superline"
-  url "https://static.crates.io/crates/superline/superline-0.9.2.crate"
-  sha256 "b1373856ded11ecb1b54f8923c09d9c81462f23205ac7c66347f48cc7fffb37b"
+  url "https://github.com/alxhill/superline/releases/download/v0.9.2/superline-0.9.2-aarch64-apple-darwin.tar.gz"
+  sha256 "7e06fa16fb1dc03e1c996d99fbf57df0ff46d7b9e323f4cdaa5b648e44fc1f55"
   license "MIT"
-  head "https://github.com/alxhill/superline.git", branch: "main"
 
-  depends_on "rust" => :build
+  depends_on arch: :arm64
+  depends_on :macos
 
   def install
-    system "cargo", "install", *std_cargo_args
+    bin.install "superline"
   end
 
   test do
