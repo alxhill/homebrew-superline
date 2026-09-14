@@ -1,8 +1,8 @@
 class Superline < Formula
   desc "Configurable Powerline implementation in pure Rust"
   homepage "https://github.com/alxhill/superline"
-  url "https://github.com/alxhill/superline/releases/download/v0.11.5/superline-0.11.5-aarch64-apple-darwin.tar.gz"
-  sha256 "b6c3adabb6492700689f2951e0dc4154d3d656bb6adee7315f4103823d72e3b3"
+  url "https://github.com/alxhill/superline/releases/download/v0.11.6/superline-0.11.6-aarch64-apple-darwin.tar.gz"
+  sha256 "41e92ee21108f8a7981b80bda889faa7e13c7bb4503ec0daf2071d054e645fc0"
   license "MIT"
 
   depends_on arch: :arm64
